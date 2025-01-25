@@ -9,6 +9,7 @@
 
 bool mapHasWallAt(float x, float y);
 int getMapContent(float x, float y);
+void setMapContent(int gridX, int gridY, int newContent);
 bool isInsideMap(float x, float y);
 void renderMap(void);
 int getMapAt(int i, int j);

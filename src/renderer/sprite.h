@@ -20,6 +20,7 @@ typedef struct {
 } sprite_t;
 
 void renderSpriteProjection(void);
+void removeSprite(int spriteID);
 void renderMapSprites(void);
 
 #endif
