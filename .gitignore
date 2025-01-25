@@ -1,0 +1,8 @@
+*.DS_Store
+
+*.exe
+*.pdb
+*.out
+*.plist
+*.exe.yml
+C_version/raycast
