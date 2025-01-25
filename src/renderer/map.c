@@ -1,5 +1,6 @@
 #include "map.h"
 #include "defs.h"
+#include <stdio.h>
 
 
 static const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
@@ -81,15 +82,10 @@ mapHasWallAt(float x, float y)
 int
 getMapContent(float x, float y)
 {
-  if (x < 0
-    || x >= MAP_NUM_COLS * TILE_SIZE
-    || y < 0
-    || y >= MAP_NUM_ROWS * TILE_SIZE)
-  {
-    return true;
-  }
-  int mapGridIndexX = floor(x / TILE_SIZE);
-  int mapGridIndexY = floor(y / TILE_SIZE);
+  int mapGridIndexX = (x / TILE_SIZE);
+  int mapGridIndexY = (y / TILE_SIZE);
+  // printf("%i, %i \n", mapGridIndexX, mapGridIndexY);
+// printf("%i \n", map[mapGridIndexY][mapGridIndexX]);
 
   return (map[mapGridIndexY][mapGridIndexX]);
 }

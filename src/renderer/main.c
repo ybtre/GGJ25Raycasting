@@ -31,6 +31,7 @@ darkenColorBy(color_t* color, float factor)
     *color = a | (b & 0x00FF0000) | (g & 0x0000FF00) | (r & 0x0000FF);
 }
 
+
 /////////////////////////////////////////////////////
 /// GAMEPLAY FUNCTION DECLARATIONS
 /////////////////////////////////////////////////////
@@ -105,17 +106,16 @@ update()
   int player_grid_x = player.x / TILE_SIZE;
   int player_grid_y = player.y / TILE_SIZE;
 
-  if(player_grid_x == 1 && player_grid_y == 1)
+  // printf("%i %i \n", player_grid_x, player_grid_y);
+
+  if(player_grid_x == 3 && player_grid_y == 1)
   {
     set_sanity_meter(.2);
   }
 
-  printf("content %i \n", getMapContent(player.x, player.y));
-
-  if(getMapContent(player.x, player.y) == 7)
+  if(player_grid_x == 4 && player_grid_y == 2)
   {
-   set_sanity_meter(.8);
-    printf("content: ");
+    set_sanity_meter(.8); 
   }
 
   castAllRays();

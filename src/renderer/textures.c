@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+upng_t* textures[NUM_TEXTURES];
+
 static const char* textureFileNames[NUM_TEXTURES] = {
     "./images/redbrick.png",    //[1]
     "./images/purplestone.png", //[2]
@@ -26,12 +28,6 @@ typedef struct {
   float angle;
   int texture;
 } sprite_t;
-
-#define NUM_SPRITES
-
-static sprite_t sprites[NUM_SPRITES] = {
-  // { .x =}
-};
 
 void
 loadTextures()

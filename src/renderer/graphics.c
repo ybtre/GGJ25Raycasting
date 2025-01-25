@@ -17,12 +17,6 @@ initializeWindow(void)
     return false;
   }
 
-  if(TTF_Init() < 0)
-  {
-    printf("SDL_ttf could not initialise! ttf_error : %s\n", TTF_GetError());
-    return false;
-  }
-
   SDL_DisplayMode display_mode;
   SDL_GetCurrentDisplayMode(0, &display_mode);
   int fullScreenWidth = display_mode.w/2;
@@ -89,32 +83,6 @@ renderColorBuffer(void)
   );
 
   SDL_RenderCopy(renderer, colorBufferTexture, NULL, NULL);
-
-  TTF_Font *font = TTF_OpenFont("../../font.ttf", 64);
- if (!font){
-    printf("Failed to load font: %s\n", TTF_GetError());
-  }
-
-  // Create surface with rendered text
-  SDL_Color textColor = {0, 0, 0, 255}; // black color
-  SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Hello World!", textColor);
-
-  if (!textSurface) {
-    printf("Failed to create text surface: %s\n", TTF_GetError());
-  }
-
-  // Create texture from surface
-  SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-  if (!textTexture){
-    printf("Failed to create text texture: %s\n", SDL_GetError());
-  }
-
-  // Render text
-  SDL_Rect textRect = {50, 50, textSurface->w, textSurface->h}; // rectangle where the text is drawn 
-  SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-
-
   SDL_RenderPresent(renderer);
 }
 

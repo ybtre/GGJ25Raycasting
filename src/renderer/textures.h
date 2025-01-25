@@ -6,7 +6,7 @@
 #include "upng.h"
 
 
-upng_t* textures[NUM_TEXTURES];
+extern upng_t* textures[NUM_TEXTURES];
 
 void loadTextures();
 void freeTextures();
