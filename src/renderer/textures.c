@@ -1,46 +1,64 @@
 #include "textures.h"
-#include "upng.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 static const char* textureFileNames[NUM_TEXTURES] = {
-    "./images/redbrick.png",
-    "./images/purplestone.png",
-    "./images/mossystone.png",
-    "./images/graystone.png",
-    "./images/colorstone.png",
-    "./images/bluestone.png",
-    "./images/wood.png",
-    "./images/eagle.png"
+    "./images/redbrick.png",    //[1]
+    "./images/purplestone.png", //[2]
+    "./images/mossystone.png",  //[3]
+    "./images/eagle.png",       //[4]
+    "./images/wall_insane.png", //[5]
+    "./images/door_insane.png", //[6]
+    "./images/door_locked.png", //[7]
+    "./images/wall.png",        //[8]
+    "./images/barrel.png",      //[9]
+    "./images/light.png",       //[10]
+    "./images/table.png",       //[11]
+    "./images/guard.png",       //[12]
+    "./images/armor.png"        //[13]
+};
+
+typedef struct {
+  float x;
+  float y;
+  float distance;
+  float angle;
+  int texture;
+} sprite_t;
+
+#define NUM_SPRITES
+
+static sprite_t sprites[NUM_SPRITES] = {
+  // { .x =}
 };
 
 void
-loadWallTextures()
+loadTextures()
 {
   for (int i = 0; i < NUM_TEXTURES; i++)
   {
-    upng_t* upng;
-
-    upng = upng_new_from_file(textureFileNames[i]);
+    upng_t* upng = upng_new_from_file(textureFileNames[i]);
     if(upng != NULL)
     {
       upng_decode(upng);
       if(upng_get_error(upng) == UPNG_EOK)
       {
-        wallTextures[i].upngTexture = upng;
-        wallTextures[i].width = upng_get_width(upng);
-        wallTextures[i].height = upng_get_height(upng);
-        wallTextures[i].texture_buffer = (uint32_t*)upng_get_buffer(upng);
+        textures[i] = upng;
+      } else {
+        printf("Error decoding texture file %s \n", textureFileNames[i]);
       }
+    } else {
+      printf("Error loading texture %s \n", textureFileNames[i]);
     }
   }
 }
 
 void
-freeWallTextures()
+freeTextures()
 {
   for(int i = 0; i < NUM_TEXTURES; i++)
   {
-    upng_free(wallTextures[i].upngTexture);
+    upng_free(textures[i]);
   }
 }

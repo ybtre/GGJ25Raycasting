@@ -11,16 +11,41 @@
 #include "map.h"
 #include "player.h"
 #include "ray.h"
+#include "sprite.h"
+#include "upng.h"
 
 
 bool isGameRunning = false;
 int ticksLastFrame;
 
+float sanity_meter = .5;
+
+void
+darkenColorBy(color_t* color, float factor)
+{
+    color_t a = (*color & 0xFF000000);
+    color_t b = (*color & 0x00FF0000) * factor;
+    color_t g = (*color & 0x0000FF00) * factor;
+    color_t r = (*color & 0x000000FF) * factor;
+
+    *color = a | (b & 0x00FF0000) | (g & 0x0000FF00) | (r & 0x0000FF);
+}
+
+/////////////////////////////////////////////////////
+/// GAMEPLAY FUNCTION DECLARATIONS
+/////////////////////////////////////////////////////
+void
+set_sanity_meter(float value)
+{
+  sanity_meter = value;
+}
+
+
 void
 setup()
 {
   //asks uPNG lib to decode all PNG files and loads the wallTextures array
-  loadWallTextures();
+  loadTextures();
 }
 
 
@@ -76,73 +101,48 @@ update()
   // printf("%f\n",deltaTime);
 
   movePlayer(deltaTime);
+
+  int player_grid_x = player.x / TILE_SIZE;
+  int player_grid_y = player.y / TILE_SIZE;
+
+  if(player_grid_x == 1 && player_grid_y == 1)
+  {
+    set_sanity_meter(.2);
+  }
+
+  printf("content %i \n", getMapContent(player.x, player.y));
+
+  if(getMapContent(player.x, player.y) == 7)
+  {
+   set_sanity_meter(.8);
+    printf("content: ");
+  }
+
   castAllRays();
 }
 
-typedef struct RGB {
-    int r;
-    int g;
-    int b;
-} rgb_t;
-
-typedef struct HEX {
-    uint32_t val;
-} hex_t;
-
-rgb_t
-HEXToRGB(hex_t hex)
-{
-  rgb_t rgbColor;
-  rgbColor.b = ((hex.val >> 16) & 0xFF) / 255.0;  // Extract the BB byte
-  rgbColor.g = ((hex.val >> 8) & 0xFF) / 255.0;   // Extract the GG byte
-  rgbColor.r = ((hex.val) & 0xFF) / 255.0;        // Extract the RR byte
-
-  return rgbColor;
-}
-
-hex_t
-RGBToHEX(rgb_t rgb)
-{
-    hex_t result;
-    result.val = ((rgb.b & 0xff) << 16) + ((rgb.g & 0xff) << 8) + (rgb.r & 0xff);
-    return result;
-}
-
-rgb_t
-tintRGB(rgb_t from, rgb_t to)
-{
-    rgb_t new;
-    new.r = from.r + (to.r - from.r) * 1;
-    new.g = from.g + (to.g - from.g) * 1;
-    new.b = from.b + (to.b - from.b) * 1;
-    return new;
-}
 
 void
 renderWallProjection()
 {
   for(int x = 0; x < NUM_RAYS; x++)
   {
+    //calculate the perpendicular distance to avoid fish-eye distortion
     float perpDistance = rays[x].distance * cos(rays[x].rayAngle - player.rotationAngle);
-    float projectedWallHeight = (TILE_SIZE / perpDistance) * DIST_PROJ_PLANE;
 
-    int wallStripHeight = projectedWallHeight;
+    //calcualte the projected wall height
+    float wallHeight = (TILE_SIZE / perpDistance) * DIST_PROJ_PLANE;
 
-    int wallTopPixel = (WINDOW_HEIGHT/2) - (wallStripHeight / 2);
-    wallTopPixel = wallTopPixel < 0 ? 0 : wallTopPixel;
+    //find the wall top Y value
+    int wallTopY = (WINDOW_HEIGHT/2) - ((int)wallHeight / 2);
+    wallTopY = wallTopY < 0 ? 0 : wallTopY;
 
-    int wallBottomPixel = (WINDOW_HEIGHT/2) + (wallStripHeight/2);
-    wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
+    //find the wall bottom Y value
+    int wallBottomY = (WINDOW_HEIGHT/2) + ((int)wallHeight/2);
+    wallBottomY = wallBottomY > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomY;
 
-    uint8_t tint = 80 / perpDistance;
-    hex_t v = {.val = 0xFF21103A};
-    rgb_t ceiling = HEXToRGB(v);
-    rgb_t to = {.r = tint, .g = tint, .b = tint};
-    rgb_t tinted = tintRGB(ceiling, to);
-    hex_t tintedCeiling = RGBToHEX(tinted);
-
-    //set the color of the ceiling
-    for(int y = 0; y < wallTopPixel; y++)
+    //Draw the celing
+    for(int y = 0; y < wallTopY; y++)
     {
       drawPixel(x, y, 0xFF0b0023);
     }
@@ -157,22 +157,29 @@ renderWallProjection()
     // get the correct texture ID number from the map content
     int texNum = rays[x].wallHitContent - 1;
 
-    int texture_width = wallTextures[texNum].width;
-    int texture_height = wallTextures[texNum].height;
+    int texture_width = upng_get_width(textures[texNum]);
+    int texture_height = upng_get_height(textures[texNum]);
 
-    // render the wall from wallTopPixel to wallBottomPixel
-    for (int y = wallTopPixel; y < wallBottomPixel; y++) {
-        // calculate texture offset Y
-        int distanceFromTop = y + (wallStripHeight / 2) - (WINDOW_HEIGHT / 2);
-        int textureOffsetY = distanceFromTop * ((float)texture_height / wallStripHeight);
+    // render the wall from wallTopY to wallBottomY
+    for (int y = wallTopY; y < wallBottomY; y++) {
+      // calculate texture offset Y
+      int distanceFromTop = y + ((int)wallHeight / 2) - (WINDOW_HEIGHT / 2);
+      int textureOffsetY = distanceFromTop * ((float)texture_height / wallHeight);
 
-        // set the color of the wall based on the color from the texture
-        uint32_t texelColor = wallTextures[texNum].texture_buffer[(texture_width * textureOffsetY) + textureOffsetX];
-        drawPixel(x, y, texelColor);
+      // set the color of the wall based on the color from the texture
+      color_t* wallTextureBuffer = (color_t*)upng_get_buffer(textures[texNum]);
+      color_t texelColor = wallTextureBuffer[(texture_width * textureOffsetY) + textureOffsetX];
+
+      if(rays[x].wallHitContent == 8)
+      {
+        darkenColorBy(&texelColor, sanity_meter);
+      }
+
+      drawPixel(x, y, texelColor);
     }
 
-    //set the color of the floor
-    for(int y = wallBottomPixel; y < WINDOW_HEIGHT; y++)
+    //draw the floor
+    for(int y = wallBottomY; y < WINDOW_HEIGHT; y++)
     {
       drawPixel(x, y, 0xFF231938);
     }
@@ -185,10 +192,12 @@ render()
   // clearColorBuffer(0xFF000000);
 
   renderWallProjection();
+  renderSpriteProjection();
 
   //display the minimap
   renderMap();
   renderRays();
+  renderMapSprites();
   renderPlayer();
 
   renderColorBuffer();
@@ -197,7 +206,7 @@ render()
 void
 releaseResources(void)
 {
-  freeWallTextures();
+  freeTextures();
   destroyWindow();
 }
 

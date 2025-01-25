@@ -1,9 +1,13 @@
 #include "player.h"
+#include "defs.h"
+#include "utils.h"
 
 player_t player =
   {
-    .x = (float)MAP_NUM_COLS * TILE_SIZE / 2,
-    .y = (float)MAP_NUM_ROWS * TILE_SIZE / 2,
+    // .x = (float)MAP_NUM_COLS * TILE_SIZE / 2,
+    // .y = (float)MAP_NUM_ROWS * TILE_SIZE / 2,
+    .x = 1.5 * TILE_SIZE,
+    .y = 1.5 * TILE_SIZE,
     .width = 1,
     .height = 1,
     .turnDirection = 0,
@@ -17,6 +21,7 @@ void
 movePlayer(float deltaTime)
 {
   player.rotationAngle += player.turnDirection * player.turnSpeed * deltaTime;
+  normalizeAngle(&player.rotationAngle);
   float moveStep = player.walkDirection * player.walkSpeed * deltaTime;
 
   float newPlayerX = player.x + cos(player.rotationAngle) * moveStep;

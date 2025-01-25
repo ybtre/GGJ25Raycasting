@@ -5,6 +5,7 @@
 #include <float.h>
 #include "defs.h"
 #include "player.h"
+#include "utils.h"
 
 typedef struct Ray {
   float rayAngle;
@@ -17,8 +18,10 @@ typedef struct Ray {
 
 extern ray_t rays[NUM_RAYS];
 
-float normalizeAngle(float angle);
-float distanceBetweenPoints(float x1, float y1, float x2, float y2);
+bool isRayFacingUp(float angle);
+bool isRayFacingDown(float angle);
+bool isRayFacingLeft(float angle);
+bool isRayFacingRight(float angle);
 void castRay(float rayAngle, int stripId);
 void castAllRays();
 void renderRays();
