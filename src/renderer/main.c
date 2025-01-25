@@ -15,6 +15,9 @@
 #include "upng.h"
 
 
+#include "../include/SDL2/SDL.h"
+#include "../include/SDL2/SDL_ttf.h"
+
 bool isGameRunning = false;
 int ticksLastFrame;
 
@@ -41,12 +44,34 @@ set_sanity_meter(float value)
   sanity_meter = value;
 }
 
+TTF_Font* font;
+SDL_Surface* text_surface;
+SDL_Texture* text_texture;
 
 void
 setup()
 {
   //asks uPNG lib to decode all PNG files and loads the wallTextures array
   loadTextures();
+
+  TTF_Init();
+
+  font = TTF_OpenFont("font.ttf", 12);
+  if(font == NULL)
+  {
+    printf("Font loading failed %s\n", TTF_GetError());
+  }
+  text_surface = TTF_RenderText_Blended(
+    font, 
+    "You wake up in a dim, cold maze. The walls stretch endlessly upward, and the air is thick with an invisible weight pressing down on your chest. ",
+    (SDL_Color){255,255,255,255});
+  if(text_surface == NULL)
+  {
+    printf("surface creation failed %s\n", TTF_GetError());
+  }
+  text_texture = SDL_CreateTextureFromSurface(
+    renderer,
+    text_surface);
 }
 
 
@@ -201,6 +226,15 @@ render()
   renderPlayer();
 
   renderColorBuffer();
+  SDL_RenderCopy(renderer, text_texture, NULL,
+                 &(SDL_Rect){
+                 WINDOW_WIDTH / 2 - text_surface->w / 2,
+                 WINDOW_HEIGHT / 2 - text_surface->h / 2,
+                 text_surface->w,
+                 text_surface->h
+                 });
+
+  SDL_RenderPresent(renderer);
 }
 
 void

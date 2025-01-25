@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 static SDL_Window *window     = NULL;
-static SDL_Renderer *renderer = NULL;
+SDL_Renderer *renderer = NULL;
 
 static color_t* colorBuffer = NULL;
 static SDL_Texture* colorBufferTexture = NULL;

@@ -10,6 +10,8 @@
 #include "../include/SDL2/SDL_ttf.h"
 #include "defs.h"
 
+extern SDL_Renderer *renderer;
+
 bool initializeWindow(void);
 void destroyWindow(void);
 void clearColorBuffer(color_t color);
