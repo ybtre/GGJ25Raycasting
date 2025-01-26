@@ -19,8 +19,8 @@ initializeWindow(void)
 
   SDL_DisplayMode display_mode;
   SDL_GetCurrentDisplayMode(0, &display_mode);
-  int fullScreenWidth = display_mode.w/2;
-  int fullScreenHeight = display_mode.h/2;
+  int fullScreenWidth = display_mode.w/1;
+  int fullScreenHeight = display_mode.h/1;
 
   window =
       // SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -83,7 +83,7 @@ renderColorBuffer(void)
   );
 
   SDL_RenderCopy(renderer, colorBufferTexture, NULL, NULL);
-  SDL_RenderPresent(renderer);
+  // SDL_RenderPresent(renderer);
 }
 
 void

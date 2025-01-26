@@ -4,21 +4,16 @@
 #define NUM_SPRITES 3
 
 static sprite_t sprites[NUM_SPRITES] = {
-  { .x = 4, .y = 2, .texture = 8 }, // barrel
-  { .x = 2, .y = 5, .texture = 9 }, // light
-  { .x = 2, .y = 10, .texture = 11 } // guard
+  { .x = (32 + (53 * (1))), .y = (14 + (28 * (10))), .texture = 15 }, // intro1 text
+  { .x = (32 + (53 * (3))), .y = (14 + (28 * (12))), .texture = 15 }, // intro2 text
+  { .x = (32 + (53 * (5))), .y = (14 + (28 * (12))), .texture = 13 }, // intro key
 };
 
-float
-wtog(float val)
+void
+removeSprite(int spriteID)
 {
-  return floor(val / TILE_SIZE);
-}
-
-float
-gtow(float val)
-{
-  return floor(val * TILE_SIZE);
+  sprites[spriteID].x = 0;
+  sprites[spriteID].y = 0;
 }
 
 void 
@@ -30,7 +25,7 @@ renderSpriteProjection(void)
   //find sprites that are visible (inside FOV)
   for (int i = 0; i < NUM_SPRITES; i++)
   {
-    float angleSpritePlayer = player.rotationAngle - atan2(gtow(sprites[i].y) - player.y, gtow(sprites[i].x) - player.x);
+    float angleSpritePlayer = player.rotationAngle - atan2((sprites[i].y) - player.y, (sprites[i].x) - player.x);
 
     if(angleSpritePlayer > PI)
     {
@@ -46,7 +41,7 @@ renderSpriteProjection(void)
     {
       sprites[i].visible = true;
       sprites[i].angle = angleSpritePlayer;
-      sprites[i].distance = distanceBetweenPoints(gtow(sprites[i].x), gtow(sprites[i].y), player.x, player.y);
+      sprites[i].distance = distanceBetweenPoints((sprites[i].x), (sprites[i].y), player.x, player.y);
       visibleSprites[numVisibleSprites] = sprites[i];
       numVisibleSprites++;
     } else {
@@ -84,7 +79,7 @@ renderSpriteProjection(void)
     float sprBottomY = ((float)WINDOW_HEIGHT / 2) + (sprHeight / 2);
     sprBottomY = (sprBottomY > WINDOW_HEIGHT) ? WINDOW_HEIGHT : sprBottomY;
 
-    float spriteAngle = atan2(gtow(spr.y) - player.y, gtow(spr.x) - player.x) - player.rotationAngle;
+    float spriteAngle = atan2((spr.y) - player.y, (spr.x) - player.x) - player.rotationAngle;
     float spriteScreenPosX = tan(spriteAngle) * DIST_PROJ_PLANE;
 
     float sprLeftX = (WINDOW_WIDTH / 2) + spriteScreenPosX - (sprWidith / 2);
@@ -125,8 +120,8 @@ renderMapSprites(void)
   for (int i = 0; i < NUM_SPRITES; i++)
   {
     drawRect(
-      gtow(sprites[i].x) * MINIMAP_SCALE_FACTOR, 
-      gtow(sprites[i].y) * MINIMAP_SCALE_FACTOR,
+      (sprites[i].x) * MINIMAP_SCALE_FACTOR, 
+      (sprites[i].y) * MINIMAP_SCALE_FACTOR,
       1, 1, 
       (sprites[i].visible) ? 0xFF00FFFF : 0xFF444444);
   }

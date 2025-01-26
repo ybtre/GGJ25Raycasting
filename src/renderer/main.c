@@ -47,24 +47,22 @@ set_sanity_meter(float value)
 TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
+SDL_Surface* choice1_surface;
+SDL_Texture* choice1_texture;
+SDL_Surface* choice2_surface;
+SDL_Texture* choice2_texture;
+
+bool x_pressed = 0;
+bool c_pressed = 0;
 
 void
-setup()
+setMainText(const char* newText)
 {
-  //asks uPNG lib to decode all PNG files and loads the wallTextures array
-  loadTextures();
-
-  TTF_Init();
-
-  font = TTF_OpenFont("font.ttf", 12);
-  if(font == NULL)
-  {
-    printf("Font loading failed %s\n", TTF_GetError());
-  }
-  text_surface = TTF_RenderText_Blended(
+    text_surface = TTF_RenderText_Blended_Wrapped(
     font, 
-    "You wake up in a dim, cold maze. The walls stretch endlessly upward, and the air is thick with an invisible weight pressing down on your chest. ",
-    (SDL_Color){255,255,255,255});
+    newText,
+    (SDL_Color){255,255,255,255},
+    1000);
   if(text_surface == NULL)
   {
     printf("surface creation failed %s\n", TTF_GetError());
@@ -74,6 +72,57 @@ setup()
     text_surface);
 }
 
+void
+setChoice1Text(const char* newText)
+{
+  
+  choice1_surface = TTF_RenderText_Blended_Wrapped(
+    font, 
+    newText,
+    (SDL_Color){255,255,255,255},
+    500);
+  choice1_texture = SDL_CreateTextureFromSurface(
+    renderer,
+    choice1_surface);
+}
+
+void
+setChoice2Text(const char* newText)
+{
+  choice2_surface = TTF_RenderText_Blended_Wrapped(
+    font, 
+    newText,
+    (SDL_Color){255,255,255,255},
+    500);
+  choice2_texture = SDL_CreateTextureFromSurface(
+    renderer,
+    choice2_surface);
+}
+
+void
+setup()
+{
+  //asks uPNG lib to decode all PNG files and loads the wallTextures array
+  loadTextures();
+
+  TTF_Init();
+
+  font = TTF_OpenFont("font.ttf", 16);
+  if(font == NULL)
+  {
+    printf("Font loading failed %s\n", TTF_GetError());
+  }
+
+  setMainText("You wake up in a dim, cold maze. The walls stretch endlessly upward, and the air is thick with an invisible weight pressing down on your chest. The space feels both vast and claustrophobic, a reflection of your own mind. You can not remember how you got here. There is no clear exit, only the faintest glow of a door ahead of you. You know you have to make choices to move forward, but each choice seems heavy, as if it could tilt the balance between feeling slightly better or just a bit worse.");
+  
+  setChoice1Text("Press [X] to START");
+  setChoice2Text(" ");
+}
+
+bool intro1 = false;
+bool intro2 = false;
+bool intro3 = false;
+bool key1=false;
 
 void
 processInput()
@@ -86,16 +135,24 @@ processInput()
     break;
   }
   case SDL_KEYDOWN: {
-    if (event.key.keysym.sym == SDLK_ESCAPE)
-      isGameRunning = false;
-    if (event.key.keysym.sym == SDLK_UP)
-      player.walkDirection = +1;
-    if (event.key.keysym.sym == SDLK_DOWN)
-      player.walkDirection = -1;
-    if (event.key.keysym.sym == SDLK_RIGHT)
-      player.turnDirection = +1;
-    if (event.key.keysym.sym == SDLK_LEFT)
-      player.turnDirection = -1;
+      if (event.key.keysym.sym == SDLK_ESCAPE)
+        isGameRunning = false;
+
+    if(intro1 == true)
+    {
+      if (event.key.keysym.sym == SDLK_UP)
+        player.walkDirection = +1;
+      if (event.key.keysym.sym == SDLK_DOWN)
+        player.walkDirection = -1;
+      if (event.key.keysym.sym == SDLK_RIGHT)
+        player.turnDirection = +1;
+      if (event.key.keysym.sym == SDLK_LEFT)
+        player.turnDirection = -1;
+    }
+    if (event.key.keysym.sym == SDLK_x)
+      x_pressed = true;
+    if (event.key.keysym.sym == SDLK_c)
+      c_pressed = true;
     break;
   }
   case SDL_KEYUP: {
@@ -107,10 +164,15 @@ processInput()
       player.turnDirection = 0;
     if (event.key.keysym.sym == SDLK_LEFT)
       player.turnDirection = 0;
+    if (event.key.keysym.sym == SDLK_x)
+      x_pressed = false;
+    if (event.key.keysym.sym == SDLK_c)
+      c_pressed = false;
     break;
   }
   }
 }
+
 
 void
 update()
@@ -131,7 +193,65 @@ update()
   int player_grid_x = player.x / TILE_SIZE;
   int player_grid_y = player.y / TILE_SIZE;
 
-  // printf("%i %i \n", player_grid_x, player_grid_y);
+  printf("%i %i \n", player_grid_x, player_grid_y);
+
+{//iNTRODUCTION ROOM
+  if(x_pressed && intro1 == false)
+  {
+    intro1=true;  
+    setMainText(" ");
+    setChoice1Text(" ");
+    setChoice2Text(" ");
+  }
+
+  if(player_grid_x == 1 && player_grid_y == 4)
+  {
+    intro2=true;
+  } else{
+    intro2=false;
+  }
+  if(intro2 == true) {
+      setMainText("Every decision takes you deeper into the labyrinth. Some choices promise relief, others bring doubt. The voice in your mind whispers, Only through these choices can you find a way forward. But what if the way forward leads to more pain? Or what if you are just walking in circles, never escaping the maze?");
+      setChoice1Text(" ");
+      setChoice2Text(" ");
+  }else if(intro2==false &&intro1==true){
+    setMainText(" ");
+    setChoice1Text(" ");
+    setChoice2Text(" ");
+  }
+
+  if(player_grid_x == 2 && player_grid_y == 5)
+  {
+    intro3=true;
+  } else {
+    intro3=false;
+  }
+
+  if(intro3==true)
+  {
+      setMainText("Each choice you make will either bring you a little closer to clarity or to more confusion. The journey is yours alone. Pickup the key and move to the next chapter.");
+      setChoice1Text(" ");
+      setChoice2Text(" ");
+  } else if(intro3==false && intro1==true &&intro2==false)
+  {
+    setMainText(" ");
+    setChoice1Text(" ");
+    setChoice2Text(" ");
+  }
+
+  if(player_grid_x == 4 && player_grid_y == 5)
+  {
+    key1=true;
+  }
+    
+  if(key1==true)
+  {
+    // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
+    setMapContent(4, 6, 0);
+    removeSprite(2);
+  }
+}
+
 
   if(player_grid_x == 3 && player_grid_y == 1)
   {
@@ -225,13 +345,33 @@ render()
   renderMapSprites();
   renderPlayer();
 
+  SDL_DisplayMode display_mode;
+  SDL_GetCurrentDisplayMode(0, &display_mode);
+  int fullScreenWidth = display_mode.w/1;
+  int fullScreenHeight = display_mode.h/1;
+
   renderColorBuffer();
   SDL_RenderCopy(renderer, text_texture, NULL,
                  &(SDL_Rect){
-                 WINDOW_WIDTH / 2 - text_surface->w / 2,
-                 WINDOW_HEIGHT / 2 - text_surface->h / 2,
+                 fullScreenWidth /2   - text_surface->w / 2,
+                 (fullScreenHeight / 2) / 4 - (text_surface->h / 2),
                  text_surface->w,
                  text_surface->h
+                 });
+
+  SDL_RenderCopy(renderer, choice1_texture, NULL,
+                 &(SDL_Rect){
+                 fullScreenWidth /2 - choice1_surface->w / 2,
+                 (fullScreenHeight /2) *1.7 + (choice1_surface->h / 2),
+                 choice1_surface->w,
+                 choice1_surface->h
+                 });
+  SDL_RenderCopy(renderer, choice2_texture, NULL,
+                 &(SDL_Rect){
+                 fullScreenWidth / 2  - choice2_surface->w / 2,
+                 (fullScreenHeight / 2) * 1.8 + (choice2_surface->h / 2),
+                 choice2_surface->w,
+                 choice2_surface->h
                  });
 
   SDL_RenderPresent(renderer);
@@ -240,6 +380,9 @@ render()
 void
 releaseResources(void)
 {
+  TTF_CloseFont(font);
+  SDL_FreeSurface(text_surface);
+  SDL_DestroyTexture(text_texture);
   freeTextures();
   destroyWindow();
 }

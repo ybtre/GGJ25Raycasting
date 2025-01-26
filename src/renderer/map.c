@@ -3,13 +3,13 @@
 #include <stdio.h>
 
 
-static const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
+static int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
   //////////////////////// STARTING ROOM
     {8, 8, 8, 8, 8, 8},
-    {8, 0, 0, 0, 0, 8},
-    {8, 0, 0, 0, 0, 8},
-    {8, 0, 0, 0, 0, 8},
-    {8, 0, 0, 0, 0, 8},
+    {8, 0, 0, 8, 8, 8},
+    {8, 0, 0, 8, 0, 8},
+    {8, 0, 8, 8, 0, 8},
+    {8, 0, 8, 8, 0, 8},
     {8, 0, 0, 0, 0, 8},
     {8, 8, 8, 8, 7, 8},
   ////////////////////////room1
@@ -88,6 +88,12 @@ getMapContent(float x, float y)
 // printf("%i \n", map[mapGridIndexY][mapGridIndexX]);
 
   return (map[mapGridIndexY][mapGridIndexX]);
+}
+
+void
+setMapContent(int gridX, int gridY, int newContent)
+{
+  map[gridY][gridX] = newContent;
 }
 
 bool
