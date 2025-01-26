@@ -195,6 +195,7 @@ update()
 
   printf("%i %i \n", player_grid_x, player_grid_y);
 
+{//iNTRODUCTION ROOM
   if(x_pressed && intro1 == false)
   {
     intro1=true;  
@@ -249,6 +250,8 @@ update()
     setMapContent(4, 6, 0);
     removeSprite(2);
   }
+}
+
 
   if(player_grid_x == 3 && player_grid_y == 1)
   {
