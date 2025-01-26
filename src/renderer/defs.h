@@ -9,7 +9,7 @@
 
 #define TILE_SIZE 64
 
-#define NUM_TEXTURES 17
+#define NUM_TEXTURES 23
 
 #define MINIMAP_SCALE_FACTOR 0.03
 

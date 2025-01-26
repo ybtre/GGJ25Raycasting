@@ -22,6 +22,8 @@ bool isGameRunning = false;
 int ticksLastFrame;
 
 float sanity_meter = .5;
+int morale = 0;
+//0-neutral [1,3] good [-1 -3] bad >-3 radical
 
 void
 darkenColorBy(color_t* color, float factor)
@@ -207,26 +209,32 @@ processInput()
       if(ch1main==true&&x_pressed == true)
       {
         ch1choice = 1;
+        morale++;
       }
       if(ch2main==true&&x_pressed == true)
       {
         ch2choice = 1;
+        morale++;
       }
       if(ch3main==true&&x_pressed == true)
       {
         ch3choice = 1;
+        morale++;
       }
       if(ch4main==true&&x_pressed == true)
       {
         ch4choice = 1;
+        morale++;
       }
       if(ch5main==true&&x_pressed == true)
       {
         ch5choice = 1;
+        morale++;
       }
       if(ch6main==true&&x_pressed == true)
       {
         ch6choice = 1;
+        morale++;
       }
     }
     if (event.key.keysym.sym == SDLK_c)
@@ -234,26 +242,32 @@ processInput()
       if(ch1main==true&&c_pressed == true)
       {
         ch1choice = 2;
+        morale--;
       }
       if(ch2main==true&&c_pressed == true)
       {
         ch2choice = 2;
+        morale--;
       }
       if(ch3main==true&&c_pressed == true)
       {
         ch3choice = 2;
+        morale--;
       }
       if(ch4main==true&&c_pressed == true)
       {
         ch4choice = 2;
+        morale--;
       }
       if(ch5main==true&&c_pressed == true)
       {
         ch5choice = 2;
+        morale--;
       }
       if(ch6main==true&&c_pressed == true)
       {
         ch6choice = 2;
+        morale--;
       }
     break;
   }
@@ -444,7 +458,7 @@ update()
       setChoice2Text(" ");
     }
 
-     if(player_grid_x == 2 && player_grid_y == 15)
+     if(player_grid_x == 3 && player_grid_y == 15)
     {
       ch2main=true;
     } else{
@@ -473,10 +487,10 @@ update()
 
   if(ch2choice > 0)
   {
-    activateSprite(5);
+    activateSprite(8);
   }
 
-  if(player_grid_x == 4 && player_grid_y == 17)
+  if(player_grid_x == 4 && player_grid_y == 17 && ch2choice > 0)
   {
     key3=true;
   }
@@ -485,7 +499,7 @@ update()
   {
     // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
     setMapContent(4, 18, 0);
-    removeSprite(5);
+    removeSprite(8);
     CH2 = 2;
     CH3 = 1;
   }
@@ -510,7 +524,7 @@ update()
       setChoice2Text(" ");
     }
 
-     if(player_grid_x == 2 && player_grid_y == 21)
+     if(player_grid_x == 2 && player_grid_y == 23)
     {
       ch3main=true;
     } else{
@@ -539,10 +553,10 @@ update()
 
   if(ch3choice > 0)
   {
-    activateSprite(5);
+    activateSprite(9);
   }
 
-  if(player_grid_x == 4 && player_grid_y == 23)
+  if(player_grid_x == 4 && player_grid_y == 23 && ch3choice>0)
   {
     key4=true;
   }
@@ -551,7 +565,7 @@ update()
   {
     // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
     setMapContent(4, 24, 0);
-    removeSprite(5);
+    removeSprite(9);
     CH3 = 2;
     CH4 = 1;
   }
