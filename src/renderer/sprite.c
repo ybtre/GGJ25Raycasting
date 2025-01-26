@@ -1,7 +1,7 @@
 #include "sprite.h"
 #include "defs.h"
 
-#define NUM_SPRITES 6
+#define NUM_SPRITES 11
 
 static sprite_t sprites[NUM_SPRITES] = {
   { .x = (32 + (53 * (1))), .y = (14 + (56 * (5))), .texture = 15, .active = true  }, // intro1 text
@@ -10,6 +10,11 @@ static sprite_t sprites[NUM_SPRITES] = {
   { .x = (32 + (53 * (5))), .y = (14 + (56 * (7))), .texture = 15, .active = true  }, // ch1 title
   { .x = (32 + (53 * (2))), .y = (14 + (56 * (11))), .texture = 16, .active = true }, // ch1 main
   { .x = (32 + (53 * (5))), .y = (14 + (56 * (13))), .texture = 13, .active = false }, // ch1 key
+  { .x = (32 + (53 * (3))), .y = (14 + (56 * (18))), .texture = 15, .active = true }, // ch2 main
+  { .x = (32 + (53 * (3))), .y = (14 + (56 * (19))), .texture = 19, .active = true }, // ch2 mirror
+  { .x = (32 + (53 * (5))), .y = (14 + (56 * (20))), .texture = 13, .active = false }, // ch2 key
+  { .x = (32 + (53 * (5))), .y = (14 + (56 * (27))), .texture = 13, .active = false }, // ch3 key
+  { .x = (64 + (53 * (2))), .y = (14 + (56 * (27))), .texture = 15, .active = true }, // ch3 main
 };
 
 void
