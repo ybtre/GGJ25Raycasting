@@ -154,7 +154,8 @@ int CH4 = 0;
 bool ch4title = false;
 bool ch4main = false;
 int ch4choice = 0;
-bool key5=false;
+bool key51=false;
+bool key52=false;
 /////////////////////////
 //chapter5 vars
 int CH5 = 0;
@@ -590,7 +591,7 @@ update()
       setChoice2Text(" ");
     }
 
-     if(player_grid_x == 2 && player_grid_y == 27)
+     if(player_grid_x == 2 && player_grid_y == 29)
     {
       ch4main=true;
     } else{
@@ -617,21 +618,35 @@ update()
     }
   }
 
-  if(ch4choice > 0)
+  if(ch4choice == 1)
   {
-    activateSprite(5);
+    activateSprite(11);
+  }
+  if(ch4choice == 2)
+  {
+    activateSprite(12);
   }
 
-  if(player_grid_x == 4 && player_grid_y == 29)
+  if(player_grid_y == 29 && ch4choice==1)
   {
-    key5=true;
+    key51=true;
+  }
+  if(player_grid_y == 29 && ch4choice==2)
+  {
+    key52=true;
   }
     
-  if(key5==true)
+  if(key51==true)
   {
-    // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
+    setMapContent(2, 30, 0);
+    removeSprite(11);
+    CH4 = 2;
+    CH5 = 1;
+  }
+  if(key52==true)
+  {
     setMapContent(4, 30, 0);
-    removeSprite(5);
+    removeSprite(12);
     CH4 = 2;
     CH5 = 1;
   }
@@ -769,15 +784,7 @@ update()
   }
 }
 
-  if(player_grid_x == 3 && player_grid_y == 1)
-  {
-    set_sanity_meter(.2);
-  }
-
-  if(player_grid_x == 4 && player_grid_y == 2)
-  {
-    set_sanity_meter(.8); 
-  }
+  set_sanity_meter((morale + 6)/12.f);
 
   castAllRays();
 }

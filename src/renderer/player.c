@@ -13,7 +13,7 @@ player_t player =
     .turnDirection = 0,
     .walkDirection = 0,
     .rotationAngle = PI / 2.0,
-    .walkSpeed = 100,
+    .walkSpeed = 200,
     .turnSpeed = 180 * (PI / 180),
   };
 

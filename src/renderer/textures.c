@@ -29,6 +29,11 @@ static const char* textureFileNames[NUM_TEXTURES] = {
     "./images/clock.png",       //[21]
     "./images/clock2.png",      //[22]
     "./images/clock3.png",      //[23]
+    "./images/door4.png",      //[24]
+    "./images/wall4.png",      //[25]
+    "./images/wall5.png",      //[26]
+    "./images/wall6.png",      //[27]
+    "./images/wall7.png",      //[28]
 };
 
 typedef struct {
