@@ -43,6 +43,7 @@ darkenColorBy(color_t* color, float factor)
 void
 set_sanity_meter(float value)
 {
+  if(value > 1) value = 1;
   sanity_meter = value;
 }
 
@@ -236,6 +237,10 @@ processInput()
       {
         ch6choice = 1;
         morale++;
+      }
+       if(ch7main==true&&x_pressed == true)
+      {
+        ch7choice = 1;
       }
     }
     if (event.key.keysym.sym == SDLK_c)
@@ -700,19 +705,18 @@ update()
 
   if(ch5choice > 0)
   {
-    activateSprite(5);
+    activateSprite(14);
   }
 
-  if(player_grid_x == 4 && player_grid_y == 35)
+  if(player_grid_x == 4 && player_grid_y == 35 && ch5choice > 0)
   {
     key6=true;
   }
     
   if(key6==true)
   {
-    // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
     setMapContent(4, 36, 0);
-    removeSprite(5);
+    removeSprite(14);
     CH5 = 2;
     CH6 = 1;
   }
@@ -737,7 +741,7 @@ update()
       setChoice2Text(" ");
     }
 
-     if(player_grid_x == 2 && player_grid_y == 39)
+     if(player_grid_x == 1 && player_grid_y == 41)
     {
       ch6main=true;
     } else{
@@ -766,25 +770,72 @@ update()
 
   if(ch6choice > 0)
   {
-    activateSprite(5);
+    activateSprite(21);
   }
 
-  if(player_grid_x == 4 && player_grid_y == 41)
+  if( ch6choice>0)
   {
     key7=true;
   }
     
   if(key7==true)
   {
-    // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
+    setMapContent(1, 42, 0);
+    setMapContent(2, 42, 0);
+    setMapContent(3, 42, 0);
     setMapContent(4, 42, 0);
-    removeSprite(5);
+    setMapContent(5, 42, 0);
+    setMapContent(1, 41, 0);
+    setMapContent(2, 41, 0);
+    setMapContent(3, 41, 0);
+    setMapContent(4, 41, 0);
+    setMapContent(5, 41, 0);
+    setMapContent(1, 43, 0);
+    setMapContent(2, 43, 0);
+    setMapContent(3, 43, 0);
+    setMapContent(4, 43, 0);
+    setMapContent(5, 43, 0);
+    removeSprite(21);
     CH6 = 2;
     CH7 = 1;
   }
 }
 
-  set_sanity_meter((morale + 6)/12.f);
+{//finale
+  if(CH7 == 1)
+  {
+    if(player_grid_x > 0 && player_grid_x < 6 && player_grid_y > 42 )
+    {
+      ch7main=true;
+      if(sanity_meter > 0)
+      {
+        //good ending
+        setMainText("The Quiet Acceptance (Positive Ending). If you choose to face the discomfort, even in small doses, you will find a sense of peace. The maze remains, but you have stopped running from it. You have accepted your struggles, and in doing so, you have created space for healing.");
+      }else if(sanity_meter == 0)
+      {
+        //neutral ending
+        setMainText("The Uncertainty (Neutral Ending): If your choices fluctuate between moments of avoidance and self-reflection, the journey is unclear. You move forward, but you do not find answers. The maze may not be as suffocating, but it still lingers, and the path ahead is uncertain.");
+      }else if(sanity_meter < 0 && sanity_meter>= -3)
+      {
+        //bad ending
+        setMainText("The Hollow Descent (Negative Ending): If you continuously avoid facing the truth or make decisions out of fear, the maze grows darker, and the weight of your choices becomes heavier. You find yourself trapped in the endless corridors, unable to move forward, stuck in the cycle.");
+      }else if(sanity_meter < -3)
+      {
+        //radical ending
+        setMainText("The Freedom in Rejection (Radical Ending):  If you choose not to rely on any quick fix, opting instead to face the unknown and embrace the discomfort, you find an unpredictable freedom. The maze shifts in chaotic patterns, but you remain steady in your choice to continue moving forward, no matter the uncertainty.");
+      }
+
+    }
+    if(ch7main == true && ch7choice == 1) {
+        setMainText("The labyrinth is a bubble of your mind. Each chapter, each choice, represents the nuances of living with depression: the struggle between comfort and change, the difficulty of facing yourself, the temptation to escape, and the need to keep moving forward. The maze never fully disappears, but through each decision, you gain more insight into how to navigate it. It is not about finding an easy way out, but about surviving, learning, and continuing to choose, one small step at a time.");
+    } 
+
+      setChoice1Text(" Press [X] to CONTINUE ");
+      setChoice2Text(" ");
+  }
+}
+
+  set_sanity_meter((morale + 9)/12.f);
 
   castAllRays();
 }
@@ -812,7 +863,9 @@ renderWallProjection()
     //Draw the celing
     for(int y = 0; y < wallTopY; y++)
     {
-      drawPixel(x, y, 0xFF0b0023);
+      color_t col =  0xFF0b0023;
+      darkenColorBy(&col, sanity_meter);
+      drawPixel(x, y, col);
     }
 
     // calculate texture offset X
@@ -838,7 +891,7 @@ renderWallProjection()
       color_t* wallTextureBuffer = (color_t*)upng_get_buffer(textures[texNum]);
       color_t texelColor = wallTextureBuffer[(texture_width * textureOffsetY) + textureOffsetX];
 
-      if(rays[x].wallHitContent == 8)
+      if(rays[x].wallHitContent != 0)
       {
         darkenColorBy(&texelColor, sanity_meter);
       }
@@ -849,7 +902,9 @@ renderWallProjection()
     //draw the floor
     for(int y = wallBottomY; y < WINDOW_HEIGHT; y++)
     {
-      drawPixel(x, y, 0xFF231938);
+      color_t col = 0xFF231938;
+      darkenColorBy(&col, sanity_meter);
+      drawPixel(x, y, col);
     }
   }
 }

@@ -1,7 +1,7 @@
 #include "sprite.h"
 #include "defs.h"
 
-#define NUM_SPRITES 14
+#define NUM_SPRITES 22
 
 static sprite_t sprites[NUM_SPRITES] = {
   { .x = (32 + (53 * (1))), .y = (14 + (56 * (5))), .texture = 15, .active = true  }, // intro1 text
@@ -18,6 +18,14 @@ static sprite_t sprites[NUM_SPRITES] = {
   { .x = (32 + (53 * (3))), .y = (14 + (56 * (34))), .texture = 13, .active = false }, // ch4 key 1
   { .x = (32 + (53 * (5))), .y = (14 + (56 * (34))), .texture = 13, .active = false }, // ch4 key 2
   { .x = (64 + (53 * (2))), .y = (14-28 + (56 * (34))), .texture = 15, .active = true }, // ch4 main
+  { .x = (32 + (53 * (5))), .y = (14-28 + (56 * (41))), .texture = 13, .active = false }, // ch5 key
+  { .x = (32-16 + (53 * (3))), .y = (14+28 + (56 * (38))), .texture = 15, .active = true }, // ch5 main
+  { .x = (32 + (53 * (1))), .y = (14+28 + (56 * (37))), .texture = 28, .active = true }, // ch5 shad1
+  { .x = (32 + (53 * (3))), .y = (14+28 + (56 * (39))), .texture = 28, .active = true }, // ch5 shad2
+  { .x = (32 + (53 * (2))), .y = (14+28 + (56 * (40))), .texture = 29, .active = true }, // ch5 shad3
+  { .x = (32 + (53 * (4))), .y = (14+28 + (56 * (38))), .texture = 29, .active = true }, // ch5 shad4
+  { .x = (32-16 + (53 * (2))), .y = (14+28 + (56 * (46))), .texture = 15, .active = true }, // ch6 main
+  { .x = (32 + (53 * (2))), .y = (14-28 + (56 * (46))), .texture = 13, .active = false }, // ch6 key
 };
 
 void
