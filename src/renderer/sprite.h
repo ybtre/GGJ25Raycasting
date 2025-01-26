@@ -16,11 +16,13 @@ typedef struct {
   float distance;
   float angle;
   bool visible;
+  bool active;
   int texture;
 } sprite_t;
 
 void renderSpriteProjection(void);
 void removeSprite(int spriteID);
+void activateSprite(int spriteID);
 void renderMapSprites(void);
 
 #endif

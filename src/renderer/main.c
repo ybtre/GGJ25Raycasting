@@ -119,10 +119,27 @@ setup()
   setChoice2Text(" ");
 }
 
+//introduction room vars
+int INTRO = 1;
 bool intro1 = false;
 bool intro2 = false;
 bool intro3 = false;
 bool key1=false;
+/////////////////////////
+//chapter1 vars
+int CH1 = 0;
+bool ch1title = false;
+bool ch1main = false;
+int ch1choice = 0;
+bool key2=false;
+/////////////////////////
+//chapter2 vars
+int CH2 = 0;
+bool ch2title = false;
+bool ch2main = false;
+int ch2choice = 0;
+bool key3=false;
+/////////////////////////
 
 void
 processInput()
@@ -150,9 +167,19 @@ processInput()
         player.turnDirection = -1;
     }
     if (event.key.keysym.sym == SDLK_x)
+    {
       x_pressed = true;
+      if(ch1main==true&&x_pressed == true)
+      {
+        ch1choice = 1;
+      }
+    }
     if (event.key.keysym.sym == SDLK_c)
       c_pressed = true;
+      if(ch1main==true&&c_pressed == true)
+      {
+        ch1choice = 2;
+      }
     break;
   }
   case SDL_KEYUP: {
@@ -196,62 +223,198 @@ update()
   printf("%i %i \n", player_grid_x, player_grid_y);
 
 {//iNTRODUCTION ROOM
-  if(x_pressed && intro1 == false)
+  if(INTRO == 1)
   {
-    intro1=true;  
-    setMainText(" ");
-    setChoice1Text(" ");
-    setChoice2Text(" ");
-  }
-
-  if(player_grid_x == 1 && player_grid_y == 4)
-  {
-    intro2=true;
-  } else{
-    intro2=false;
-  }
-  if(intro2 == true) {
-      setMainText("Every decision takes you deeper into the labyrinth. Some choices promise relief, others bring doubt. The voice in your mind whispers, Only through these choices can you find a way forward. But what if the way forward leads to more pain? Or what if you are just walking in circles, never escaping the maze?");
+    if(x_pressed && intro1 == false)
+    {
+      intro1=true;  
+      setMainText(" ");
       setChoice1Text(" ");
       setChoice2Text(" ");
-  }else if(intro2==false &&intro1==true){
-    setMainText(" ");
-    setChoice1Text(" ");
-    setChoice2Text(" ");
-  }
+    }
 
-  if(player_grid_x == 2 && player_grid_y == 5)
-  {
-    intro3=true;
-  } else {
-    intro3=false;
-  }
+    if(player_grid_x == 1 && player_grid_y == 4)
+    {
+      intro2=true;
+    } else{
+      intro2=false;
+    }
+    if(intro2 == true) {
+        setMainText("Every decision takes you deeper into the labyrinth. Some choices promise relief, others bring doubt. The voice in your mind whispers, Only through these choices can you find a way forward. But what if the way forward leads to more pain? Or what if you are just walking in circles, never escaping the maze?");
+        setChoice1Text(" ");
+        setChoice2Text(" ");
+    }else if(intro2==false &&intro1==true){
+      setMainText(" ");
+      setChoice1Text(" ");
+      setChoice2Text(" ");
+    }
 
-  if(intro3==true)
-  {
+    if(player_grid_x == 2 && player_grid_y == 5)
+    {
+      intro3=true;
+    } else {
+      intro3=false;
+    }
+
+    if(intro3==true)
+    {
       setMainText("Each choice you make will either bring you a little closer to clarity or to more confusion. The journey is yours alone. Pickup the key and move to the next chapter.");
       setChoice1Text(" ");
       setChoice2Text(" ");
-  } else if(intro3==false && intro1==true &&intro2==false)
-  {
-    setMainText(" ");
-    setChoice1Text(" ");
-    setChoice2Text(" ");
-  }
+    } else if(intro3==false && intro1==true &&intro2==false)
+    {
+      setMainText(" ");
+      setChoice1Text(" ");
+      setChoice2Text(" ");
+    }
 
-  if(player_grid_x == 4 && player_grid_y == 5)
-  {
-    key1=true;
-  }
-    
-  if(key1==true)
-  {
-    // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
-    setMapContent(4, 6, 0);
-    removeSprite(2);
+    if(player_grid_x == 4 && player_grid_y == 5)
+    {
+      key1=true;
+    }
+      
+    if(key1==true)
+    {
+      // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
+      setMapContent(4, 6, 0);
+      removeSprite(2);
+      INTRO = 2;
+      CH1 = 1;
+    }
   }
 }
 
+{//CHAPTER 1
+  if(CH1 == 1)
+  {
+    if(player_grid_x == 4 && player_grid_y == 6)
+    {
+      ch1title=true;
+    } else{
+      ch1title=false;
+    }
+    if(ch1title == true) {
+        setMainText("Chapter 1: The Chair of Surrender");
+        setChoice1Text(" ");
+        setChoice2Text(" ");
+    }else if(ch1title==false){
+      setMainText(" ");
+      setChoice1Text(" ");
+      setChoice2Text(" ");
+    }
+
+     if(player_grid_x == 2 && player_grid_y == 9)
+    {
+      ch1main=true;
+    } else{
+      ch1main=false;
+    }
+    if(ch1main == true && ch1choice == 0) {
+        setMainText("The first room is small and unassuming, with a single wooden chair in the center. It seems simple, almost comforting, but you feel a deep, unexplainable pull toward it. The chair represents rest, but also surrender. The voice in your mind urges you to sit, promising you a moment of peace. The walls around you grow tighter as you stand still, as though waiting for something to happen.");
+        setChoice1Text("[X] Sit down in the chair.");
+        setChoice2Text("[C] Walk away from the chair.");
+    } else if(ch1main == true && ch1choice == 1)
+    {
+      setMainText("You take a seat. The relief is immediate. Your body relaxes, and for a brief moment, the pressure in your chest lightens. But soon, you realize the chair is too comfortable. It is almost too easy. The moment of peace fades into a numbing stillness, and you begin to feel trapped by the comfort, as if you have stopped moving forward. You are not better, just... stalled."); 
+      setChoice1Text(" ");
+      setChoice2Text(" ");
+    } else if(ch1main == true && ch1choice == 2)
+    {
+      setMainText("You resist the temptation to sit. The act of turning your back on the chair feels like a small victory, even though the walls feel colder and more oppressive. The pressure in your chest does not completely disappear, but there's a subtle shift. Moving forward feels slightly easier, though the path remains uncertain. You might not have found rest, but you have kept moving.");
+      setChoice1Text(" ");
+      setChoice2Text(" ");
+    } else if(ch1title==false){
+      setMainText(" ");
+      setChoice1Text(" ");
+      setChoice2Text(" ");
+    }
+  }
+
+  if(ch1choice > 0)
+  {
+    activateSprite(5);
+  }
+
+  if(player_grid_x == 4 && player_grid_y == 11)
+  {
+    key2=true;
+  }
+    
+  if(key2==true)
+  {
+    // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
+    setMapContent(4, 12, 0);
+    removeSprite(5);
+    CH1 = 2;
+    CH2 = 1;
+  }
+}
+
+// {//CHAPTER 2
+//   if(CH2 == 1)
+//   {
+//     if(player_grid_x == 4 && player_grid_y == 6)
+//     {
+//       ch1title=true;
+//     } else{
+//       ch1title=false;
+//     }
+//     if(ch1title == true) {
+//         setMainText("Chapter 1: The Chair of Surrender");
+//         setChoice1Text(" ");
+//         setChoice2Text(" ");
+//     }else if(ch1title==false){
+//       setMainText(" ");
+//       setChoice1Text(" ");
+//       setChoice2Text(" ");
+//     }
+
+//      if(player_grid_x == 2 && player_grid_y == 9)
+//     {
+//       ch1main=true;
+//     } else{
+//       ch1main=false;
+//     }
+//     if(ch1main == true && ch1choice == 0) {
+//         setMainText("The first room is small and unassuming, with a single wooden chair in the center. It seems simple, almost comforting, but you feel a deep, unexplainable pull toward it. The chair represents rest, but also surrender. The voice in your mind urges you to sit, promising you a moment of peace. The walls around you grow tighter as you stand still, as though waiting for something to happen.");
+//         setChoice1Text("[X] Sit down in the chair.");
+//         setChoice2Text("[C] Walk away from the chair.");
+//     } else if(ch1main == true && ch1choice == 1)
+//     {
+//       setMainText("You take a seat. The relief is immediate. Your body relaxes, and for a brief moment, the pressure in your chest lightens. But soon, you realize the chair is too comfortable. It is almost too easy. The moment of peace fades into a numbing stillness, and you begin to feel trapped by the comfort, as if you have stopped moving forward. You are not better, just... stalled."); 
+//       setChoice1Text(" ");
+//       setChoice2Text(" ");
+//     } else if(ch1main == true && ch1choice == 2)
+//     {
+//       setMainText("You resist the temptation to sit. The act of turning your back on the chair feels like a small victory, even though the walls feel colder and more oppressive. The pressure in your chest does not completely disappear, but there's a subtle shift. Moving forward feels slightly easier, though the path remains uncertain. You might not have found rest, but you have kept moving.");
+//       setChoice1Text(" ");
+//       setChoice2Text(" ");
+//     } else if(ch1title==false){
+//       setMainText(" ");
+//       setChoice1Text(" ");
+//       setChoice2Text(" ");
+//     }
+//   }
+
+//   if(ch1choice > 0)
+//   {
+//     activateSprite(5);
+//   }
+
+//   if(player_grid_x == 4 && player_grid_y == 11)
+//   {
+//     key2=true;
+//   }
+    
+//   if(key2==true)
+//   {
+//     // printf("%i\n",getMapContent(4*TILE_SIZE,6*TILE_SIZE));
+//     setMapContent(4, 12, 0);
+//     removeSprite(5);
+//     CH1 = 2;
+//     CH2 = 1;
+//   }
+// }
 
   if(player_grid_x == 3 && player_grid_y == 1)
   {

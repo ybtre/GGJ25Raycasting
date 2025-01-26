@@ -1,19 +1,27 @@
 #include "sprite.h"
 #include "defs.h"
 
-#define NUM_SPRITES 3
+#define NUM_SPRITES 6
 
 static sprite_t sprites[NUM_SPRITES] = {
-  { .x = (32 + (53 * (1))), .y = (14 + (28 * (10))), .texture = 15 }, // intro1 text
-  { .x = (32 + (53 * (3))), .y = (14 + (28 * (12))), .texture = 15 }, // intro2 text
-  { .x = (32 + (53 * (5))), .y = (14 + (28 * (12))), .texture = 13 }, // intro key
+  { .x = (32 + (53 * (1))), .y = (14 + (56 * (5))), .texture = 15, .active = true  }, // intro1 text
+  { .x = (32 + (53 * (3))), .y = (14 + (56 * (6))), .texture = 15, .active = true  }, // intro2 text
+  { .x = (32 + (53 * (5))), .y = (14 + (56 * (6))), .texture = 13, .active = true  }, // intro key
+  { .x = (32 + (53 * (5))), .y = (14 + (56 * (7))), .texture = 15, .active = true  }, // ch1 title
+  { .x = (32 + (53 * (2))), .y = (14 + (56 * (11))), .texture = 16, .active = true }, // ch1 main
+  { .x = (32 + (53 * (5))), .y = (14 + (56 * (13))), .texture = 13, .active = false }, // ch1 key
 };
 
 void
 removeSprite(int spriteID)
 {
-  sprites[spriteID].x = 0;
-  sprites[spriteID].y = 0;
+  sprites[spriteID].active = false;
+}
+
+void
+activateSprite(int spriteID)
+{
+  sprites[spriteID].active = true;
 }
 
 void 
@@ -67,6 +75,8 @@ renderSpriteProjection(void)
   for(int i = 0; i < numVisibleSprites; i++)
   {
     sprite_t spr = visibleSprites[i];
+
+    if(!spr.active) continue;
 
     float perpDistance = spr.distance * cos(spr.angle);
 
